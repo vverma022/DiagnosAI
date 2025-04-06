@@ -1,10 +1,11 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import ReactMarkdown from "react-markdown";
+
 
 interface Diagnosis {
   condition: string;
-  probability: number;
   description: string;
 }
 
@@ -47,26 +48,20 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
       </div>
 
       <div className="space-y-4">
-        {diagnoses.map((diagnosis, index) => (
-          <div 
-            key={index} 
-            className="border border-diagnosai-gray rounded-lg p-4"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="font-semibold">{diagnosis.condition}</h3>
-              <span className={`px-2 py-1 rounded-full text-xs ${
-                diagnosis.probability > 0.7 
-                  ? 'bg-red-100 text-red-800' 
-                  : diagnosis.probability > 0.4 
-                    ? 'bg-yellow-100 text-yellow-800' 
-                    : 'bg-green-100 text-green-800'
-              }`}>
-                {Math.round(diagnosis.probability * 100)}% Match
-              </span>
-            </div>
-            <p className="text-sm text-gray-600">{diagnosis.description}</p>
-          </div>
-        ))}
+      {diagnoses.map((diagnosis, index) => (
+  <div 
+    key={index} 
+    className="border border-diagnosai-gray rounded-lg p-4"
+  >
+    <div className="flex justify-between items-center mb-2">
+      <h3 className="font-semibold">{diagnosis.condition}</h3>
+    </div>
+
+    <ReactMarkdown>
+      {diagnosis.description}
+    </ReactMarkdown>
+  </div>
+))}
       </div>
 
       <div className="mt-6 p-4 bg-diagnosai-gray/50 rounded-lg">

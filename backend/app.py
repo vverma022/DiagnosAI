@@ -1,4 +1,5 @@
 import os
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
@@ -30,6 +31,14 @@ genai.configure(api_key=os.getenv("GEMINI_API"))
 
 # FastAPI setup
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],  # frontend origin (change in prod)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class SymptomInput(BaseModel):
     symptoms: list[str]  # Expecting a list of symptom names

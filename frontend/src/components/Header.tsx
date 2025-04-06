@@ -1,5 +1,7 @@
 
 import React from 'react';
+import { ModeToggle } from './ui/mode-toggle';
+import { HeartPulseIcon } from 'lucide-react';
 
 const Header: React.FC = () => {
   return (
@@ -7,6 +9,7 @@ const Header: React.FC = () => {
       <div className="container py-4 flex justify-between items-center">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold">
+            <HeartPulseIcon className="w-8 h-8 text-diagnosai-red inline-block mr-2" />
             <span className="text-diagnosai-red">Diagnos</span>
             <span className="text-diagnosai-black">AI</span>
           </h1>

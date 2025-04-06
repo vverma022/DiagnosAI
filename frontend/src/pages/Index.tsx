@@ -5,10 +5,10 @@ import Footer from '@/components/Footer';
 import SymptomSelector from '@/components/SymptomSelector';
 import ResultsDisplay from '@/components/ResultsDisplay';
 import { toast } from '@/components/ui/use-toast';
+import axios from 'axios';
 
 interface Diagnosis {
   condition: string;
-  probability: number;
   description: string;
 }
 
@@ -48,21 +48,7 @@ const MOCK_CONDITIONS = [
 ];
 
 const SYMPTOMS = [
-  'skin_rash', 'stomach_pain', 'pus_filled_pimples', 'dizziness', 'loss_of_appetite', 
-  'obesity', 'anxiety', 'bladder_discomfort', 'dehydration', 'restlessness',
-  'itching', 'extra_marital_contacts', 'blister', 'red_sore_around_nose', 'mood_swings', 
-  'loss_of_balance', 'skin_peeling', 'neck_pain', 'altered_sensorium', 'indigestion', 
-  'swelling_of_stomach', 'diarrhoea', 'cough', 'vomiting', 'cramps', 
-  'muscle_wasting', 'hip_joint_pain', 'continuous_feel_of_urine', 'dischromic _patches', 'cold_hands_and_feets', 
-  'shivering', 'ulcers_on_tongue', 'spinning_movements', 'fatigue', 'yellowish_skin', 
-  'weakness_in_limbs', 'continuous_sneezing', 'silver_like_dusting', 'muscle_weakness', 'sunken_eyes', 
-  'blurred_and_distorted_vision', 'sweating', 'pain_during_bowel_movements', 'chills', 'headache', 
-  'back_pain', 'bloody_stool', 'stiff_neck', 'blackheads', 'nausea', 
-  'patches_in_throat', 'breathlessness', 'weakness_of_one_body_side', 'movement_stiffness', 'swelling_joints', 
-  'dark_urine', 'lethargy', 'constipation', 'bruising', 'nodal_skin_eruptions', 
-  'chest_pain', 'acidity', 'scurring', 'foul_smell_of urine', 'weight_loss', 
-  'weight_gain', 'abdominal_pain', 'pain_in_anal_region', 'watering_from_eyes', 'knee_pain', 
-  'joint_pain', 'burning_micturition', 'high_fever'
+ ' skin_rash', ' stomach_pain', ' pus_filled_pimples', ' dizziness', ' loss_of_appetite', ' obesity', ' anxiety', ' bladder_discomfort', ' dehydration', ' restlessness', 'itching', ' extra_marital_contacts', ' blister', ' red_sore_around_nose', ' mood_swings', ' loss_of_balance', ' skin_peeling', ' neck_pain', ' altered_sensorium', ' indigestion', ' swelling_of_stomach', ' diarrhoea', ' cough', ' vomiting', ' cramps', ' muscle_wasting', ' hip_joint_pain', ' continuous_feel_of_urine', ' dischromic _patches', ' cold_hands_and_feets', ' shivering', ' ulcers_on_tongue', ' spinning_movements', ' fatigue', ' yellowish_skin', ' weakness_in_limbs', ' continuous_sneezing', ' silver_like_dusting', ' muscle_weakness', ' sunken_eyes', ' blurred_and_distorted_vision', ' sweating', ' pain_during_bowel_movements', ' chills', ' headache', ' back_pain', ' bloody_stool', ' stiff_neck', ' blackheads', ' nausea', ' patches_in_throat', ' breathlessness', ' weakness_of_one_body_side', ' movement_stiffness', ' swelling_joints', ' dark_urine', ' lethargy', ' constipation', ' bruising', ' nodal_skin_eruptions', ' chest_pain', ' acidity', ' scurring', ' foul_smell_of urine', ' weight_loss', ' weight_gain', ' abdominal_pain', ' pain_in_anal_region', ' watering_from_eyes', ' knee_pain', ' joint_pain', ' burning_micturition', ' high_fever'
 ];
 
 const Index = () => {
@@ -93,14 +79,23 @@ const Index = () => {
     setLoading(true);
     setDiagnoses(null);
 
-    // Simulate API call with a delay
+    
     try {
-      // In a real app, you would make an actual API call here
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Generate mock diagnoses based on selected symptoms
-      const mockDiagnoses = generateMockDiagnoses(selectedSymptoms);
-      setDiagnoses(mockDiagnoses);
+      setLoading(true);
+
+  const response = await axios.post("http://localhost:8000/predict/", {
+    symptoms: selectedSymptoms, // Example: ["itching", "fatigue"]
+  });
+
+  const { predicted_disease, explanation } = response.data;
+
+  // Transform API response to match UI format
+  const formattedDiagnosis = {
+    condition: predicted_disease,
+    description: explanation,
+  };
+
+  setDiagnoses([formattedDiagnosis]);
     } catch (error) {
       console.error("Error getting diagnosis:", error);
       toast({
