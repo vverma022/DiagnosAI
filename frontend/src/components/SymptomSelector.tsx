@@ -41,7 +41,7 @@ const SymptomSelector: React.FC<SymptomSelectorProps> = ({
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm border border-diagnosai-gray p-6">
+    <div className="w-full bg-sidebar-primary rounded-lg shadow-sm border border-diagnosai-gray p-6">
       <h2 className="text-xl font-semibold mb-4">Select Your Symptoms</h2>
       
       <div className="relative mb-6">

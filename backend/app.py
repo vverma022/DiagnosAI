@@ -6,42 +6,35 @@ import joblib
 import numpy as np
 import google.generativeai as genai
 from dotenv import load_dotenv
-from fastapi import FastAPI
-from pydantic import BaseModel
-import numpy as np
-import os
-import joblib
-from dotenv import load_dotenv
-import google.generativeai as genai
 import pickle
 
 load_dotenv()
 
-# Load your trained model and encoders
+
 model = joblib.load("trained/disease_prediction_model.pkl")
 label_encoder = joblib.load("trained/label_encoder.pkl")
 
-# Load symptom encoder (symptom: number mapping)
+
 with open("trained/symptom_encoder.pkl", "rb") as f:
     symptom_encoder = pickle.load(f)
 
 print(symptom_encoder.keys())
-# Configure Gemini
+
 genai.configure(api_key=os.getenv("GEMINI_API"))
 
-# FastAPI setup
+
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080"],  # frontend origin (change in prod)
+    allow_origins=["http://localhost:8080"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 class SymptomInput(BaseModel):
-    symptoms: list[str]  # Expecting a list of symptom names
+    symptoms: list[str]  
 
 @app.post("/predict/")
 async def predict_disease(input_data: SymptomInput):
@@ -62,13 +55,13 @@ async def predict_disease(input_data: SymptomInput):
         predicted_index = model.predict(symptom_vector)[0]
         predicted_disease = label_encoder.inverse_transform([int(predicted_index)])[0]
 
-        gemini_prompt = f"Explain the disease {predicted_disease} in detail, including symptoms, causes, and treatment options."
+        gemini_prompt = f"Explain the disease {predicted_disease} in detail, including symptoms, causes, and treatment options like medications explain in very simple terms so that people can udestand easily."
 
         gemini_model = genai.GenerativeModel("gemini-2.0-flash")
         response = gemini_model.generate_content(
             gemini_prompt,
             generation_config=genai.types.GenerationConfig(
-                max_output_tokens=200,  # Adjust based on need
+                max_output_tokens=200,  
                 temperature=0.7
             )
         )

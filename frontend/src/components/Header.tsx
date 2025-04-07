@@ -16,18 +16,21 @@ const Header: React.FC = () => {
         </div>
         <nav>
           <ul className="flex gap-6">
+          <li>
+             
+            </li>
             <li>
-              <a href="#" className="text-sm hover:text-diagnosai-red transition-colors">
+              <a href="/" className="text-sm hover:text-diagnosai-red transition-colors">
                 Home
               </a>
             </li>
             <li>
-              <a href="#" className="text-sm hover:text-diagnosai-red transition-colors">
+              <a href="/about" className="text-sm hover:text-diagnosai-red transition-colors">
                 About
               </a>
             </li>
             <li>
-              <a href="#" className="text-sm hover:text-diagnosai-red transition-colors">
+              <a href="/contact" className="text-sm hover:text-diagnosai-red transition-colors">
                 Contact
               </a>
             </li>
